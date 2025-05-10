@@ -68,5 +68,20 @@ create table students(
 
 show tables;
 desc students;
+
+
+create table employees(
+    salary int,
+    name varchar(30)
+);
+
+
+create table items(
+    name varchar(10),
+    price int,
+    brand varchar(20)
+);
+
+
 ```
 
