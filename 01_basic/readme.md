@@ -41,7 +41,7 @@ create database college;
 ```
 ### delete database
 ```sql
-drop database tutorial555;
+drop database tutorial;
 ```
 ### enter into database
 ```sql
@@ -56,5 +56,17 @@ select database();
 show tables;
 ```
 
+### Create table
+```sql
+create table students(
+    roll int,
+    name varchar(30),
+    email varchar(30),
+    subject varchar(30),
+    age int
+);
 
+show tables;
+desc students;
+```
 
