@@ -48,6 +48,7 @@ Task: create a books table:
 Write queries to:
 - Find books with more than 200 pages.
 - Calculate the average pages per author.
+- Count number of books written by each author.
 
 
 
