@@ -68,6 +68,8 @@ from Address a;
 select city from Address where personId = 1;
 
 select 
-    *, 
-    (select a.city from Address a where a.personId = p.personId) as city 
+    firstName, lastName, 
+    (select a.city from Address a where a.personId = p.personId) as city,
+    (select a.state from Address a where a.personId = p.personId) as state 
 from Person p;
+
