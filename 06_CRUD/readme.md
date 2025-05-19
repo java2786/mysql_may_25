@@ -28,7 +28,12 @@ VALUES
   ('Pooja Verma', 'Jaipur', 'Rajasthan'), 
   ('Rohan Mehta', 'Ahmedabad', 'Gujarat'), 
   ('Mohan Mishra', 'Patna', 'Bihar'), 
-  ('Nisha Kapoor', 'Lucknow', 'Uttar Pradesh'); 
+  ('Nisha Kapoor', 'Lucknow', 'Uttar Pradesh'),
+
+    ('Raj Kapoor', 'Jaipur', 'Rajasthan'), 
+  ('Priya Singh', 'Pune', 'Maharashtra');
+
+
 ```  
 ## Create table for Employees 
 ```sql 
@@ -100,6 +105,10 @@ VALUES
   (6, '2023-04-06', 112.50),
   (7, '2023-04-07', 118.75),
   (2, '2023-04-12', 157);
+
+  insert into Orders(CustomerID, OrderDate, TotalAmount) values(13, '2023-03-15', 201.24);
+  insert into Orders(CustomerID, OrderDate, TotalAmount) values(14, '2023-05-01', 2501.24);
+  
 ```   
  
 # CREATE: Inserting Data 
@@ -209,11 +218,6 @@ FROM Customers
 WHERE deleted = FALSE; 
 ``` 
  
-# practice exercises: 
-List all customers from Maharashtra. 
-Update salary of employee named 'Raj Kapoor' by 5%. 
-Delete a product with ProductID = 108. 
-Retrieve only customer names who placed orders after '2023-04-01'. 
  
 # Solutions
 ```sql
@@ -234,4 +238,31 @@ select * from Products where Price = (select max(Price) as Price from Products w
 
 # Practice
 - Find order price ordered by Raj Kapoor
-- Find totol price of orders make by Priya
+```sql
+select orderId, totalAmount from Orders where CustomerID in (
+    select CustomerID from Customers where CustomerName = 'Raj Kapoor'
+);
+```
+
+- Find total price of orders made by Priya
+```sql
+select sum(totalAmount) as total_order_price from Orders where CustomerID in (select CustomerID from Customers where CustomerName like 'Priya%');
+```
+
+
+# practice exercises: 
+- List all customers from Maharashtra. 
+- Update salary of employee named 'Raj Kapoor' by 5%. 
+- Delete a product with ProductID = 108. 
+- Retrieve only customer names who placed orders after '2023-04-01'. 
+
+```sql
+select * from Customers where state = 'Maharashtra';
+
+update Employees set Salary = Salary * (5/100  + 1) where EmployeeName = 'Raj Kapoor';
+
+delete from Products where ProductID = 108;
+
+select (select CustomerName from Customers c where c.CustomerID=o.CustomerID) as cus_name from Orders o where OrderDate > '2023-04-01';
+
+```
