@@ -255,6 +255,9 @@ select sum(totalAmount) as total_order_price from Orders where CustomerID in (se
 - Update salary of employee named 'Raj Kapoor' by 5%. 
 - Delete a product with ProductID = 108. 
 - Retrieve only customer names who placed orders after '2023-04-01'. 
+- Find all customers name ending with Singh
+- Find all customers name starts with Priya
+- Find all customers names containing oo
 
 ```sql
 select * from Customers where state = 'Maharashtra';
@@ -265,4 +268,10 @@ delete from Products where ProductID = 108;
 
 select (select CustomerName from Customers c where c.CustomerID=o.CustomerID) as cus_name from Orders o where OrderDate > '2023-04-01';
 
+select * from Customers where CustomerName like '%Singh';
+
+select * from Customers where CustomerName like 'Priya%';
+
+select * from Customers where CustomerName like '%oo%';
 ```
+
