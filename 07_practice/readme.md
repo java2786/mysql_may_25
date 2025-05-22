@@ -19,7 +19,6 @@ Task:
 
 ### Problem 2: Foreign Key Relationship
 Create an exam_scores table with:
-- exam_id (PK)
 - student_id (FK → students)
 - subject_id (FK → subjects)
 - score (INT)
@@ -32,6 +31,82 @@ Task:
 - Find students who scored above average in "Math".
 - List subjects where no student scored below 40.
 
+```sql
+drop database if exists school_db;
+
+create database school_db;
+
+use school_db;
+
+create table Students(
+    student_id int primary key auto_increment,
+    name varchar(50),
+    class varchar(4),
+    city varchar(50)
+);
+
+create table Subjects(
+    subject_id int primary key auto_increment,
+    subject_name varchar(50),
+    teacher varchar(50)
+);
+
+INSERT INTO Students (name, class, city) 
+VALUES ('Aarav Patel', '10A', 'Mumbai'),
+       ('Diya Sharma', '9B', 'Delhi'),
+       ('Rohan Gupta', '11C', 'Bangalore');
+
+INSERT INTO Subjects (subject_name, teacher) 
+VALUES ('Math', 'Mr. Desai'),
+       ('Science', 'Ms. Iyer'),
+       ('History', 'Mr. Khan');
+
+
+create table Exam_scores(
+    student_id int,
+    subject_id int,
+    score int,
+    foreign key (student_id) references Students(student_id),
+    foreign key (subject_id) references Subjects(subject_id),
+    primary key(student_id, subject_id)
+);
+
+-- insert into Exam_scores (student_id, subject_id, score) values(5, 3, 65);
+
+
+insert into Exam_scores (student_id, subject_id, score) values(1, 3, 85);
+
+-- insert into Exam_scores (student_id, subject_id, score) values(1, 3, 65);
+
+
+insert into Exam_scores (student_id, subject_id, score) values
+(1, 1, 76),
+(1, 2, 96),
+(2, 1, 97),
+(2, 3, 78),
+(3, 1, 82),
+(3, 2, 85);
+
+
+INSERT INTO Students (name, class, city) 
+VALUES ('Ram Kumar', '9B', 'Patna');
+
+INSERT INTO Subjects (subject_name, teacher) 
+VALUES ('Hindi', 'Mr. Suresh');
+
+
+
+
+
+select * from Students where student_id in (select student_id from Exam_scores where score > (select avg(score) from Exam_scores where subject_id = (select subject_id from Subjects where subject_name='Math')) and subject_id = (select subject_id from Subjects where subject_name='Math'));
+
+
+
+
+select * from Subjects where subject_id in (select subject_id from Exam_scores where score < 40);
+
+
+```
 
 ### Problem 4: Advanced Subquery 
 Task:
@@ -47,7 +122,6 @@ Diya Sharma		285
 Task:
 - Delete a student from the students table.
 - Observe what happens to their exam_scores records.
-- Modify the FK constraint to automatically delete dependent records (ON DELETE CASCADE).
 
 ### Problem 6: Real-World Scenario (Library System)
 Task:
