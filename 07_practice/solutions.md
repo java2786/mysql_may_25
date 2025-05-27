@@ -16,13 +16,21 @@ Task:
 	- subjects (subject_id PK, subject_name, teacher)
 
 #### Insert 5 Indian student records (e.g., "Aarav Patel", "Diya Sharma") and 3 subjects ("Math", "Science", "History").
+```sql
+CREATE TABLE students (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    class VARCHAR(10),
+    city VARCHAR(20)
+);
+```
 
 ### Problem 2: Foreign Key Relationship
 Create an exam_scores table with:
+- exam_id (PK)
 - student_id (FK → students)
 - subject_id (FK → subjects)
 - score (INT)
-
 
 #### Insert 5 exam score records (ensure valid student/subject IDs).
 Challenge: Try inserting an invalid student_id and observe the error.
@@ -33,80 +41,12 @@ Task:
 - List subjects where no student scored below 40.
 
 ```sql
-drop database if exists school_db;
-
-create database school_db;
-
-use school_db;
-
-create table Students(
-    student_id int primary key auto_increment,
-    name varchar(50),
-    class varchar(4),
-    city varchar(50)
+-- Example subquery structure
+SELECT name FROM students 
+WHERE student_id IN (
+    SELECT student_id FROM exam_scores 
+    WHERE score > (SELECT AVG(score) FROM exam_scores)
 );
-
-create table Subjects(
-    subject_id int primary key auto_increment,
-    subject_name varchar(50),
-    teacher varchar(50)
-);
-
-INSERT INTO Students (name, class, city) 
-VALUES ('Aarav Patel', '10A', 'Mumbai'),
-       ('Diya Sharma', '9B', 'Delhi'),
-       ('Rohan Gupta', '11C', 'Bangalore');
-
-INSERT INTO Subjects (subject_name, teacher) 
-VALUES ('Math', 'Mr. Desai'),
-       ('Science', 'Ms. Iyer'),
-       ('History', 'Mr. Khan');
-
-
-create table Exam_scores(
-    student_id int,
-    subject_id int,
-    score int,
-    foreign key (student_id) references Students(student_id),
-    foreign key (subject_id) references Subjects(subject_id),
-    primary key(student_id, subject_id)
-);
-
--- insert into Exam_scores (student_id, subject_id, score) values(5, 3, 65);
-
-
-insert into Exam_scores (student_id, subject_id, score) values(1, 3, 85);
-
--- insert into Exam_scores (student_id, subject_id, score) values(1, 3, 65);
-
-
-insert into Exam_scores (student_id, subject_id, score) values
-(1, 1, 76),
-(1, 2, 96),
-(2, 1, 97),
-(2, 3, 78),
-(3, 1, 82),
-(3, 2, 85);
-
-
-INSERT INTO Students (name, class, city) 
-VALUES ('Ram Kumar', '9B', 'Patna');
-
-INSERT INTO Subjects (subject_name, teacher) 
-VALUES ('Hindi', 'Mr. Suresh');
-
-
-
-
-
-select * from Students where student_id in (select student_id from Exam_scores where score > (select avg(score) from Exam_scores where subject_id = (select subject_id from Subjects where subject_name='Math')) and subject_id = (select subject_id from Subjects where subject_name='Math'));
-
-
-
-
-select * from Subjects where subject_id in (select subject_id from Exam_scores where score < 40);
-
-
 ```
 
 ### Problem 4: Advanced Subquery 
@@ -123,6 +63,7 @@ Diya Sharma		285
 Task:
 - Delete a student from the students table.
 - Observe what happens to their exam_scores records.
+- Modify the FK constraint to automatically delete dependent records (ON DELETE CASCADE).
 
 ### Problem 6: Real-World Scenario (Library System)
 Task:
@@ -142,6 +83,55 @@ Task:
 - Insert data showing hierarchy (e.g., "Principal" → "HOD" → "Teacher").
 - Write a query to show who reports to whom.
 
+
+## Solution 1: Database Setup
+```sql
+CREATE DATABASE school_db;
+USE school_db;
+
+CREATE TABLE students (
+    student_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    class VARCHAR(10),
+    city VARCHAR(20)
+);
+
+CREATE TABLE subjects (
+    subject_id INT PRIMARY KEY AUTO_INCREMENT,
+    subject_name VARCHAR(30),
+    teacher VARCHAR(50)
+);
+
+INSERT INTO students (name, class, city) 
+VALUES ('Aarav Patel', '10A', 'Mumbai'),
+       ('Diya Sharma', '9B', 'Delhi'),
+       ('Rohan Gupta', '11C', 'Bangalore');
+
+INSERT INTO subjects (subject_name, teacher) 
+VALUES ('Math', 'Mr. Desai'),
+       ('Science', 'Ms. Iyer'),
+       ('History', 'Mr. Khan');
+```
+
+## Solution 4: Top 2 Students
+```sql
+SELECT 
+    s.name,
+    (SELECT SUM(score) 
+     FROM exam_scores e 
+     WHERE e.student_id = s.student_id) AS total_score
+FROM students s
+ORDER BY total_score DESC
+LIMIT 2;
+```
+
+## Solution 6: Students Who Never Issued a Book
+```sql
+SELECT name FROM students
+WHERE student_id NOT IN (
+    SELECT DISTINCT student_id FROM book_issues
+);
+```
 
 # Key Learning Outcomes
 - Reinforce PK/FK relationships through real-world examples (school, library).
