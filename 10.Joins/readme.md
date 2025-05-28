@@ -95,9 +95,12 @@ INSERT INTO books (author_id, title, publish_year, publishing_house, rating) VAL
 (3, 'The Adventures of Tom Sawyer', 1876, 'Chatto & Windus', 4.00),
 (4, '1984', 1949, 'Secker & Warburg', 4.50),
 (5, 'Mrs. Dalloway', 1925, 'Hogarth Press', 4.00),
-(6, 'The Great Gatsby', 1925, 'Charles Scribner\'s Sons', 3.91),
-(7, 'The Old Man and the Sea', 1952, 'Charles Scribner\'s Sons', 4.20),
+(6, 'The Great Gatsby', 1925, "Charles Scribner\'s Sons", 3.91),
+(7, 'The Old Man and the Sea', 1952, "Charles Scribner\'s Sons", 4.20),
 (8, 'One Hundred Years of Solitude', 1967, 'Harper & Row', 4.06);
+
+INSERT INTO books (author_id, title, publish_year, publishing_house, rating) VALUES
+(1, 'MySql for beginners', 2012, 'Chand publication', 2);
 
 INSERT INTO adaptations (book_id, type, title, release_year, rating) VALUES
 (1, 'movie', 'Pride and Prejudice', 2005, 7.8),
@@ -127,7 +130,7 @@ INSERT INTO book_reviews (book_id, review, author_id) VALUES
 ## Queries
 - Show the name of each author together with the title of the book they wrote and the year in which that book was published.
 - Show the name of each author together with the title of the book they wrote and the year in which that book was published. Show only books published after 1860.
-- Show Books Adapted Within 4 Years and Rated Lower Than the Adaptation
+- Show Books Adapted Within 50 Years and Rated Lower Than the Adaptation
 
 
 ## Solutions
@@ -159,7 +162,7 @@ SELECT
 FROM books book
 JOIN adaptations adaptation
   ON book.id = adaptation.book_id
-WHERE adaptation.release_year - book.publish_year <= 4
+WHERE adaptation.release_year - book.publish_year <= 50
   AND book.rating < adaptation.rating;
 ```
 
